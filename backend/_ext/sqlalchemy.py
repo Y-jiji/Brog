@@ -15,7 +15,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine(
-    CONFIG["database_url"],
+    CONFIG["url"],
     connect_args=CONFIG["connect_args"],
     echo=CONFIG["echo"]
 )
