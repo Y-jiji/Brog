@@ -36,7 +36,7 @@ async def indexPage(received, scope):
 <div style='margin: 0 auto; text-align:center'>
 <h1 style='margin: 0 auto; text-align:center'> Apple </h1>
 <h2 style='margin: 0 auto; text-align:center'> This is an apple. I like apples. Apples are good for ourselves. </h2>
-<img style='margin: 0 auto; text-align:center' src="http://localhost:8000/img?id=goodapple.jpg">
+<img style='margin: 0 auto; text-align:center' src="http://localhost:8081/img?id=goodapple.jpg">
 <h2 style='margin: 0 auto; text-align:center'><a href="/apple/bad/">Bad Apple-></a></h2>
 </div>
 """.encode('GBK'), 'text/html'
@@ -48,7 +48,7 @@ async def anotherPage(received, scope):
 <div style='margin: 0 auto; text-align:center'>
 <h1 style='margin: 0 auto; text-align:center'> Bad Apple </h1>
 <h2 style='margin: 0 auto; text-align:center'>This is an bad apple. Residents in 東方幻想郷 like bad apples. But bad apples are bad for their health.<h2>
-<img style='margin: 0 auto; text-align:center' src="http://localhost:8000/img?id=badapple.png">
+<img style='margin: 0 auto; text-align:center' src="http://localhost:8081/img?id=badapple.png">
 <h2 style='margin: 0 auto; text-align:center'><a href="/apple/good/">Good Apple-></a></h2>
 </div>
 """.encode('GBK'), 'text/html'
