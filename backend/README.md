@@ -77,9 +77,9 @@ if you want to create all tables, just type `create all tables`
 
 # Read Auto Document Prepared By SwaggerUI
 
-## <path>/docs
+## \<path\>/docs
   
-Open <path>/docs to read information about it, in which <path> can be: 
+Open \<path\>/docs to read information about it, in which \<path\> can be: 
   - '/file'
   - '/auth'
   - '/' (which means the root)
