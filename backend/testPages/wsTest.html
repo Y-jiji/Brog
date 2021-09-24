@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{Chat}}</title>
+    <script src='/static/jquery.js'></script>
+</head>
+
+<body>
+    <h1>WebSocket Chat</h1>
+    <form action="" onsubmit="sendMessage(event)">
+        <label>Pending ID: <input type="text" id="pendingId" autocomplete="off" value="Pending ID" /></label>
+        <button onclick="connect(event)">Connect</button>
+        <hr>
+        <label>Message: <input type="text" id="messageText" autocomplete="off" /></label>
+        <button>Send</button>
+    </form>
+    <ul id='messageList'>
+    </ul>
+    <script>
+        var ws = null;
+        function connect(event) {
+            var pendingId = document.getElementById("pendingId")
+            ws = new WebSocket(`ws://localhost:8000/file/q/upload?pendingID=${pendingId.value}`);
+            ws.onmessage = function (event) {
+                var messageList = document.getElementById('messageList')
+                var message = document.createElement('li')
+                var content = document.createTextNode(event.data)
+                message.appendChild(content)
+                messageList.appendChild(message)
+            };
+            event.preventDefault()
+        }
+        function sendMessage(event) {
+            var input = document.getElementById("messageText")
+            ws.send(input.value)
+            input.value = ''
+            event.preventDefault()
+        }
+    </script>
+</body>
+
+</html>

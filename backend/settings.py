@@ -1,3 +1,5 @@
+from os import path
+
 CORS_CONFIG = {
     "allow_origins": ["*"],
     "allow_credentials": True,
@@ -26,3 +28,6 @@ def get_SQLALCHEMY_CONFIG_URL(x): return "%s+%s://%s:%s@%s/%s" % (
 
 
 SQLALCHEMY_CONFIG["url"] = get_SQLALCHEMY_CONFIG_URL(SQLALCHEMY_CONFIG)
+
+
+FILE_PATH = path.join(path.dirname(__file__), "uploadedFile")
