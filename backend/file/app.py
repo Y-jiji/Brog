@@ -1,24 +1,33 @@
 # 全局依赖
 import asyncio
-from os import close
 from fastapi import *
-from typing import List, Optional, Dict
-import time
+from typing import Optional, Dict
 
 # 本文件夹依赖
 from .utils import writeFile
+from .description import *
 
 # 父文件夹依赖
 from auth.public import login_required
 from _ext.security import getRandStr, secureCtx
 
+# 实例化应用对象
 file = FastAPI()
 
-# pendingDictionary(存储为用户执行的任务的状态(例如上传文件的进度))
+
 penDict: Dict[str, Dict[str, int]] = {}
+"""
+pendingDictionary(存储为用户执行的任务的状态(例如上传文件的进度))
+第一层索引: 用户名; 
+    第二层索引: 任务id; 
+        值: 代表任务进度的数字
+"""
 
 
 async def getPendingId(userId):
+    """
+    获取一个新任务的pendingId, 并把它加入penDict
+    """
     if userId not in penDict:
         penDict[userId] = {}
     x = getRandStr(5)
@@ -28,13 +37,12 @@ async def getPendingId(userId):
     return x
 
 
-@file.post("/upload")
+@file.post("/upload", description=describe_upload)
 @login_required
 async def upload(req: Request, resp: Response, f: Optional[UploadFile] = File(None)):
     if not f:
         return {"status": "failure", "reason": "no file"}
 
-    t = time.time()
     userId = req.cookies["id"]
     taskId = await getPendingId(userId)
     userPenDict = penDict[userId]
@@ -55,14 +63,12 @@ async def upload(req: Request, resp: Response, f: Optional[UploadFile] = File(No
         writeFile(f, progPlus)
     ).add_done_callback(lambda x: popTask())
 
-    print(time.time() - t)
-
     return {"status": "success", "taskId": taskId}
 
 
 # query upload
 @file.websocket("/q/upload")
-async def upload(ws: WebSocket):
+async def queryUpload(ws: WebSocket):
     userId = ws.query_params["id"]
     token = ws.query_params["token"]
     hashed_token = ws.query_params["hashed_token"]
@@ -89,7 +95,7 @@ async def upload(ws: WebSocket):
 
 
 @file.websocket("/q-all/upload")
-async def upload(ws: WebSocket):
+async def queryAllUpload(ws: WebSocket):
     userId = ws.query_params["id"]
     token = ws.query_params["token"]
     hashed_token = ws.query_params["hashed_token"]
@@ -113,6 +119,9 @@ async def upload(ws: WebSocket):
                 return
         except WebSocketDisconnect:
             return
+
+
+# 下面都是测试时才使用的接口
 
 
 @file.get("/wsTestPage/")

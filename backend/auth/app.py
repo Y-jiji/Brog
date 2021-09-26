@@ -14,10 +14,16 @@ from fastapi import FastAPI, Request, Response
 # 父级依赖项
 from _ext.security import secureCtx
 
+# 实例化应用对象
 auth = FastAPI()
 
 
 def setAllCookies(resp: Response, sqlUser):
+    """
+    设置所有和user相关的cookie
+        sqlUser: 数据库sqlUser对象, 至少有属性id和token
+        resp: FastAPI响应对象
+    """
     resp.set_cookie("id", sqlUser.id, expires=10800)
     resp.set_cookie("token", sqlUser.token, expires=10800)
     resp.set_cookie("hashed_token", secureCtx.hash(

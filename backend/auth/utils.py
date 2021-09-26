@@ -13,6 +13,9 @@ from fastapi import HTTPException, status
 from sqlalchemy.sql.expression import or_
 
 async def tryUserCreate(sqlUser: SqlUser):
+    """
+    进行一次将用户注册如数据库的尝试, sqlUser为SqlAlchemy模型对象
+    """
     try:
         print(len(sqlUser.pwd))
         db.add(sqlUser)
@@ -25,6 +28,9 @@ async def tryUserCreate(sqlUser: SqlUser):
 
 
 async def userCreate(user: UserAuth):
+    """
+    把用户加入数据库, user为Pydantic模型对象
+    """
     sqlUser = SqlUser(
         id=getRandStr(10),
         name=user.name,
@@ -40,11 +46,17 @@ async def userCreate(user: UserAuth):
 
 
 async def userAlready(user: UserAuth):
+    """
+    查询数据库中是否已有用户, user为Pydantic模型对象
+    """
     sqlUser: SqlUser = db.query(SqlUser).filter_by(name=user.name).first()
     return True if sqlUser else False
 
 
 async def userVerify(user: UserAuth):
+    """
+    查询数据库用户信息是否正确, user为Pydantic模型对象
+    """
     try:
         if user.name:
             sqlUserSet = db.query(SqlUser).filter_by(name = user.name).filter_by(pwd = user.pwd)
@@ -64,6 +76,9 @@ async def userVerify(user: UserAuth):
 
 
 async def changeToken(user: UserAuth):
+    """
+    改变用户token, 不返回值, user为Pydantic模型对象
+    """
     try:
         sqlUserSet = db.query(SqlUser).filter(
             or_(SqlUser.name == user.name,
