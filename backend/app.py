@@ -1,7 +1,7 @@
 # 引入本文件依赖, 注意程序入口不能使用'.'记号作为开头的import, 因为程序入口不能判定它所处的文件夹
 from auth.app import *
 from file.app import *
-from settings import CORS_CONFIG
+from settings import CORS_CONFIG, STATIC_PATH
 
 
 # 引入全局依赖
@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 # 实例化ASGI对象
 main = FastAPI()  # 主应用
-static = StaticFiles(directory="static")  # 静态文件加载器
+static = StaticFiles(directory=STATIC_PATH)  # 静态文件加载器
 
 
 # 挂载子应用
@@ -36,4 +36,7 @@ if __name__ == "__main__":
     import uvicorn as uv
     color = 33
     print(f'\033[{color}mapp located in folder:\n------{__file__}')
-    uv.run("app:main", reload=True)
+    uv.run(app='app:main',
+           reload=True,
+           host='127.0.0.1',
+           port=8081)

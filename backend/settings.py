@@ -29,5 +29,8 @@ def get_SQLALCHEMY_CONFIG_URL(x): return "%s+%s://%s:%s@%s/%s" % (
 
 SQLALCHEMY_CONFIG["url"] = get_SQLALCHEMY_CONFIG_URL(SQLALCHEMY_CONFIG)
 
+THIS_DIR = path.dirname(__file__)
 
-FILE_PATH = path.join(path.dirname(__file__), "uploadedFile")
+FILE_PATH = path.join(THIS_DIR, "uploadedFile")
+
+STATIC_PATH = path.join(THIS_DIR, "static")
