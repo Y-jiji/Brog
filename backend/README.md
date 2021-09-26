@@ -2,21 +2,25 @@
 
 网络安全部分基本都是自己实现的, 目前看来基本上没有什么坑. 
 
-
 # Dependencies
 
+## Lazy Installation
+
+Run this command in `backend` directory. 
+
+```
+pip install -r requirements.txt
+```
+
 ## Web
+
 ```shell
-
 pip install uvicorn fastapi 
-
 ```
 
 ## Sql
 ```shell
-
 pip install sqlalchemy pymysql
-
 ```
 
 
@@ -78,7 +82,7 @@ if you want to create all tables, just type `create all tables`
 # Read Auto Document Prepared By SwaggerUI
 
 ## \<path\>/docs
-  
+
 Open \<path\>/docs to read information about it, in which \<path\> can be: 
   - '/file'
   - '/auth'
