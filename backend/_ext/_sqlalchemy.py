@@ -9,7 +9,7 @@ __all__ = [
     "Boolean",
 ]
 
-from settings import SQLALCHEMY_CONFIG as CONFIG
+from .ext_settings import SQLALCHEMY_CONFIG as CONFIG
 from sqlalchemy import create_engine, Column, String, Integer, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
