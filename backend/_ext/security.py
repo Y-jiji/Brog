@@ -12,6 +12,8 @@ from string import ascii_letters, digits
 def getRandStr(length):
     return "".join(choices(ascii_letters + digits, k=length))
 
+def getRandDigStr(length):
+    return "".join(choices(digits, k=length))
 
 secureCtx: CryptContext = bigcrypt(
     salt="ab")

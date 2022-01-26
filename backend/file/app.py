@@ -1,21 +1,42 @@
 # 全局依赖
 import asyncio
 from os import close
+from sqlite3 import dbapi2
 from fastapi import *
-from typing import List, Optional, Dict
+from typing import Collection, List, Optional, Dict
 import time
+from fastapi import Depends
 
 # 本文件夹依赖
 from .utils import writeFile
+from file.models import Pdf_File
 
 # 父文件夹依赖
 from auth.public import login_required
 from _ext.security import getRandStr, secureCtx
 
+#数据库
+from file import crud, schemas
+from database import SessionLocal, engine, Base
+from sqlalchemy.orm import Session
+
+#数据库初始化，如果没有，则自动创建
+Base.metadata.create_all(bind=engine)
+
+
+from os import path
+
 file = FastAPI()
 
 # pendingDictionary(存储为用户执行的任务的状态(例如上传文件的进度))
 penDict: Dict[str, Dict[str, int]] = {}
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 async def getPendingId(userId):
@@ -50,13 +71,19 @@ async def upload(req: Request, resp: Response, f: Optional[UploadFile] = File(No
         else:
             penDict.pop(userId)
 
+    def insertdb(upF: UploadFile):
+        #地址存入数据库
+        db = SessionLocal()
+        ret = crud.insert_file(db, upF.filename, path.join(FILE_PATH, upF.filename))
+        db.close
     # 提交任务, 返回结果
     asyncio.create_task(
         writeFile(f, progPlus)
     ).add_done_callback(lambda x: popTask())
 
     print(time.time() - t)
-
+    #存入数据库
+    insertdb(f)
     return {"status": "success", "taskId": taskId}
 
 
@@ -120,3 +147,16 @@ async def wsTestPage(req: Request):
     from fastapi.templating import Jinja2Templates
     templates = Jinja2Templates("testPages")
     return templates.TemplateResponse("wsTest.html", context={"request": req, "Chat": "wsTestPage"})
+
+
+
+
+@file.get("/get_file_path")
+async def getFilePath(req: Request, filename: str, db: Session = Depends(get_db)):
+    obj_tmp = crud.get_file_path(db=db, filename=filename)
+    if obj_tmp == False:
+        return {'status': 'failure', "message": "读取文件失败"}
+    path_tmp = obj_tmp.file_path
+    # with open(path_tmp, 'rb') as file:
+    #     return {'status':'success', 'content':file.read()}
+    return {'status':'success', 'file_path': path_tmp}

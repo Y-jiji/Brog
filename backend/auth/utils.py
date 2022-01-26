@@ -1,12 +1,18 @@
 # 基于本文件夹的依赖项
-from auth.models import SqlUser
+from time import time
+from auth.models import SqlUser, Captcha
 from auth.schemas import UserAuth
 
 
 # 基于父文件夹的依赖项
 from _ext.sqlalchemy import *
-from _ext.security import getRandStr
+from _ext.security import getRandStr, getRandDigStr
+from settings import * 
 
+# 外部依赖项
+from email.mime.text import MIMEText
+from email.utils import formataddr
+import smtplib, random, datetime
 
 # 基于全局的依赖项
 from fastapi import HTTPException, status
@@ -75,3 +81,56 @@ async def changeToken(user: UserAuth):
             status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="user is None"
         )
+
+async def checkCaptcha(email: str):
+    obj = db.query(Captcha).filter(Captcha.email == email).first()
+    if (not obj):
+        return True
+    time_tmp = obj.time
+    time_now = datetime.datetime.now()
+    duration = time_now - time_tmp
+    if (duration.seconds > 120):
+        return True
+    else:
+        return False
+
+async def insertCaptcha(email: str, captcha: str):
+    db_tmp_captcha_obj = db.query(Captcha).filter(Captcha.email == email).first()
+    if (db_tmp_captcha_obj):
+        db_tmp_captcha_obj.time = datetime.datetime.now()
+    else:
+        db_tmp_captcha_obj = Captcha(email=email, captcha=captcha)
+        # print(db_tmp_captcha_obj)
+        db.add(db_tmp_captcha_obj)
+    db.commit()
+    db.refresh(db_tmp_captcha_obj)
+    return db_tmp_captcha_obj
+
+async def queryCaptcha(email: str):
+    return db.query(Captcha).filter(Captcha.email == email).order_by(Captcha.id.desc()).first()
+
+async def sendCaptcha(email: str):
+    captcha = getRandDigStr(6)
+    msg = MIMEText('验证码为：' + str(captcha), 'plain', 'utf-8')
+    msg['From'] = formataddr(["From Brog", SENDER_ADDRESS])  # 发件人昵称， 发件人邮箱
+    msg['To'] = formataddr(["尊贵的用户", email])  # 收件人昵称
+    msg['Subject'] = "Brog验证码"  # 主题
+
+    server = smtplib.SMTP_SSL("smtp.qq.com", 465)  # SMTP服务器
+    server.login(SENDER_ADDRESS, SENDER_PASS)  # 授权码
+    server.sendmail(SENDER_ADDRESS, [email, ], msg.as_string())  
+    server.quit()  # 关闭连接
+    try:
+        obj = await insertCaptcha(email, captcha)
+        # print(obj)
+    except:
+        print("插入记录失败")
+        
+async def verifyCaptcha_(email: str, captcha: str):
+    captcha_obj = await queryCaptcha(email)
+    return ((captcha_obj != None) and (captcha_obj.captcha == captcha))
+    
+async def pwdUpdate(email: str, pwd: str):
+    db_tmp_user_obj = db.query(UserAuth).filter(UserAuth.email==email)
+    db_tmp_user_obj.pwd = pwd
+    db.commit()

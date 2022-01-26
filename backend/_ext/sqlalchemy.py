@@ -7,10 +7,11 @@ __all__ = [
     "String",
     "Integer",
     "Boolean",
+    "DateTime"
 ]
 
 from settings import SQLALCHEMY_CONFIG as CONFIG
-from sqlalchemy import create_engine, Column, String, Integer, Boolean
+from sqlalchemy import create_engine, Column, String, Integer, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
