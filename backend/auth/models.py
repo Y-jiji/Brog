@@ -1,5 +1,6 @@
 from datetime import datetime
 from re import T
+from typing import Optional
 from _ext.sqlalchemy import *
 from sqlalchemy.sql import func
 

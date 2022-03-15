@@ -14,10 +14,11 @@ from file.models import Pdf_File
 # 父文件夹依赖
 from auth.public import login_required
 from _ext.security import getRandStr, secureCtx
+from settings import FILE_PATH
 
 #数据库
 from file import crud, schemas
-from database import SessionLocal, engine, Base
+from _ext.sqlalchemy import *
 from sqlalchemy.orm import Session
 
 #数据库初始化，如果没有，则自动创建
@@ -159,4 +160,4 @@ async def getFilePath(req: Request, filename: str, db: Session = Depends(get_db)
     path_tmp = obj_tmp.file_path
     # with open(path_tmp, 'rb') as file:
     #     return {'status':'success', 'content':file.read()}
-    return {'status':'success', 'file_path': path_tmp}
+    return {'status':'success', 'file_obj': path_tmp}

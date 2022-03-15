@@ -7,7 +7,8 @@ from typing import Optional
 
 
 class UserAuth(BaseModel):
-    id: Optional[str]
+    # id: Optional[str]
     name: Optional[str]
+    email: Optional[str]
     pwd: Optional[str]
-    token: Optional[str]
+    # token: Optional[str]

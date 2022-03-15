@@ -1,6 +1,8 @@
 # 引入本文件依赖, 注意程序入口不能使用'.'记号作为开头的import, 因为程序入口不能判定它所处的文件夹
 from auth.app import *
 from file.app import *
+from user.app import *
+from note.app import *
 from settings import CORS_CONFIG
 
 
@@ -19,7 +21,8 @@ static = StaticFiles(directory="static")  # 静态文件加载器
 main.mount("/auth", auth, name="auth")
 main.mount("/file", file, name='file')
 main.mount("/static", static, name="static")
-
+main.mount("/user", user, name="user")
+main.mount("/note", note, name="note")
 
 # 挂载中间件
 main.add_middleware(

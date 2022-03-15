@@ -1,12 +1,15 @@
 # 基于本文件夹的依赖项
+import email
 from time import time
+
+from sqlalchemy import false
 from auth.models import SqlUser, Captcha
 from auth.schemas import UserAuth
 
 
 # 基于父文件夹的依赖项
 from _ext.sqlalchemy import *
-from _ext.security import getRandStr, getRandDigStr
+from _ext.security import get_password_hash, getRandStr, getRandDigStr
 from settings import * 
 
 # 外部依赖项
@@ -34,6 +37,7 @@ async def userCreate(user: UserAuth):
     sqlUser = SqlUser(
         id=getRandStr(10),
         name=user.name,
+        email=user.email,
         pwd=user.pwd,
         token=getRandStr(20)
     )
@@ -42,6 +46,7 @@ async def userCreate(user: UserAuth):
         if ok:
             return ok
         sqlUser.id = getRandStr(10)
+    db
     return None
 
 
@@ -60,6 +65,8 @@ async def userVerify(user: UserAuth):
         # 同时因为name和id的唯一性, 这个集合至多只有一个元素, 不存在修改多个用户的问题
         sqlUserSet.update({SqlUser.token: getRandStr(20)})
         sqlUser = sqlUserSet.first()
+        # obj = db.query(SqlUser).filter_by(email = user.email)
+        db.commit()
         assert sqlUser
     except:
         raise HTTPException(
@@ -67,6 +74,12 @@ async def userVerify(user: UserAuth):
             detail="user is None"
         )
     return sqlUser
+
+async def user_token(name, token):
+    obj = db.query(SqlUser).filter_by(name = name).first()
+    print(obj.token)
+    print(token)
+    return obj.token == token
 
 
 async def changeToken(user: UserAuth):
@@ -131,6 +144,20 @@ async def verifyCaptcha_(email: str, captcha: str):
     return ((captcha_obj != None) and (captcha_obj.captcha == captcha))
     
 async def pwdUpdate(email: str, pwd: str):
-    db_tmp_user_obj = db.query(UserAuth).filter(UserAuth.email==email)
+    db_tmp_user_obj = db.query(SqlUser).filter(SqlUser.email==email)
     db_tmp_user_obj.pwd = pwd
     db.commit()
+     
+async def insert_user(email: str, pwd: str, name: str):
+    print(email)
+    db_tmp_user_obj = db.query(SqlUser).filter(SqlUser.email==email).first()
+    print(db_tmp_user_obj)
+    # if db_tmp_user_obj != {}:
+    #     return False
+    db_tmp_user_obj = SqlUser(email = email, name = name, pwd = get_password_hash(pwd))
+    print(999)
+    print(db_tmp_user_obj)
+    # db.add(db_tmp_user_obj)
+    # db.commit()
+    # db.refresh()
+    return True
