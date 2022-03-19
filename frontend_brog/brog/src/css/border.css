@@ -1,0 +1,35 @@
+.left_right_border{
+    border: black 2px solid;
+    border-top:none;
+    border-bottom: none;
+    /* border-top-left-radius:30px 30px; */
+    border-radius: 30px 30px 30px 30px;
+
+}
+
+
+.input_border{
+    border: black 2px solid;
+    border-left: none;
+    border-right: none;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.top_bottom_border{
+    border: black 2px solid;
+    border-left:none;
+    border-right: none;
+    /* border-top-left-radius:30px 30px; */
+    border-radius: 30px 30px 30px 30px;
+
+}
+
+
+.top_bottom_border_small{
+    border: black 2px solid;
+    border-left:none;
+    border-right: none;
+    /* border-top-left-radius:30px 30px; */
+    border-radius: 10px;
+
+}

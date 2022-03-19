@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script src="./build/pdf.js"></script>
+    <script src="./build/pdf.worker.js"></script> -->
+    <script>
+        function watch(){
+            var x=document.getElementById("myIframe");
+            var y=(x.contentWindow || x.contentDocument);//获得iframe嵌套的子页面的内容
+            if (y.document) y=y.document;
+            y.addEventListener('mousedown', function (e) {
+                xi = e.pageX;
+                yi = e.pageY;
+            }, true);
+            y.addEventListener('mouseup', function (e) {
+                _xi = e.pageX;
+                _yi = e.pageY;
+                if (xi == _xi && yi == _yi) return; //防止鼠标不动，收到空值
+                console.log(y.getSelection().toString())
+            }, true);
+        }
+    </script>
+</head>
+<body>
+    <a href="./web/viewer.html?file=../imm3274.pdf">在新的页面打开pdf文件</a>
+    <iframe src ="./web/viewer.html?file=../imm3274.pdf" id = 'myIframe' style="height: 500px;width: 500px;">
+        do not support
+    </iframe>
+    <input type="button" onclick="watch()" value="监听">
+    <script>
+    </script>
+</body>
+</html>
