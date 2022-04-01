@@ -11,10 +11,10 @@ CORS_CONFIG = {
 SQLALCHEMY_CONFIG = {
     "py_engine": "pymysql",
     "real_engine": "mysql",
-    "host:port": "localhost:3306",
-    "database": "brog_db",
-    "username": "root",
-    "password": "root",
+    "host:port": "database.rainspace.cn:3306",
+    "database": "brog",
+    "username": "brog",
+    "password": "Brog2022",
     "connect_args": {},
     "echo": True
 }

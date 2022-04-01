@@ -138,3 +138,8 @@ async def pwdForget(req: Request, email: str, pwd: str, resp: Response):
 #         return {"status": "success", "msg":"注册成功"}
 #     else:
 #         return {"status": "failure", "msg":"邮箱已被注册"}
+
+
+@auth.get("/msg")
+async def test_msg(req: Request, resp: Response):
+    return {"message": "跨域？"}

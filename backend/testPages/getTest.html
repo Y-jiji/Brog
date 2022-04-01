@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<button id="api">请求接口</button>
+<h4>结果</h4>
+<div id="content"></div>
+<script>
+    $('#api').click(function () {
+        $.ajax({  //发送ajax请求
+            url: 'http://localhost:8000/auth/msg',
+            type: "get",
+            data: {},
+            success: function (arg) {
+                //arg = JSON.parse(arg);
+                console.log(arg);
+                $('#content').text(arg.message)
+                //return false;
+            },
+            error: function () {
+                console.log("网络请求错误!");
+            }
+        });
+    });
+
+</script>
+</body>
+</html>
