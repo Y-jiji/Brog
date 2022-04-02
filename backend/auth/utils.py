@@ -110,6 +110,7 @@ async def checkCaptcha(email: str):
 async def insertCaptcha(email: str, captcha: str):
     db_tmp_captcha_obj = db.query(Captcha).filter(Captcha.email == email).first()
     if (db_tmp_captcha_obj):
+        db_tmp_captcha_obj.captcha = captcha
         db_tmp_captcha_obj.time = datetime.datetime.now()
     else:
         db_tmp_captcha_obj = Captcha(email=email, captcha=captcha)
