@@ -57,7 +57,7 @@ async def userAlready(user: UserAuth):
 
 async def userVerify(user: UserAuth):
     try:
-        if user.name:
+        if user.email:
             sqlUserSet = db.query(SqlUser).filter_by(email = user.email).filter_by(pwd = user.pwd)
         elif user.id:
             sqlUserSet = db.query(SqlUser).filter_by(id = user.id).filter_by(token = user.token)
