@@ -22,20 +22,23 @@ async def getNoteList(req: Request, email: str):
     try:
         note_list_tmp = await queryNote(email)
         return {'status':'success', 'notes':note_list_tmp}
-    except:
+    except Exception as e:
+        print(e)
         return {'status':'failure', 'msg':'获取个人笔记错误'}
 
 @note.post("/save_note")
 async def saveDraft(note: UserNote,req: Request):
     ## 保存草稿
     try:
-        note_obj_tmp = await insertNote(email=UserNote.email,
-            note_name=UserNote.note_name,
-            content=UserNote.content,
+        note_obj_tmp = await insertNote(email=note.email,
+            note_name=note.note_name,
+            content=note.content,
             status=False
         )
         return {'status':'success'}
-    except:
+    except Exception as e:
+        print(note)
+        print(e)
         return {'status':'failure'}
 
 
@@ -44,5 +47,6 @@ async def releaseNote(nid:int, req:Request):
     try:
         await updateNoteStatus(nid)
         return {'status':'success'}
-    except:
+    except Exception as e:
+        print(e)
         return {'status':'failure'}

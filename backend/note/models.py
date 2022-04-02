@@ -10,5 +10,6 @@ class Note(Base):
     id = Column(Integer, primary_key=True, index=True)
     note_name = Column(String(255))
     content = Column(LONGTEXT)
+    email = Column(String(255))
     status = Column(Boolean, default=False)
     is_delete = Column(Boolean, default=False)

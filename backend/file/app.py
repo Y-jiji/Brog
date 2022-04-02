@@ -76,7 +76,7 @@ async def upload(req: Request, resp: Response, f: Optional[UploadFile] = File(No
         #地址存入数据库
         db = SessionLocal()
         ret = crud.insert_file(db, upF.filename, path.join(FILE_PATH, upF.filename))
-        db.close
+        db.close()
     # 提交任务, 返回结果
     asyncio.create_task(
         writeFile(f, progPlus)

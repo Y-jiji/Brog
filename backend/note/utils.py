@@ -10,15 +10,20 @@ from _ext.sqlalchemy import *
 
 async def insertNote(email: str , note_name: str, content: str, status: bool):
     db_tmp_note_obj = Note(email=email, note_name=note_name, content=content, status=status)
+    print(db_tmp_note_obj)
     db.add(db_tmp_note_obj)
     db.commit()
     db.refresh(db_tmp_note_obj)
     return db_tmp_note_obj
 
 async def queryNote(email: str):
-    return db.query(Note).filter(Note.email == email)
+    # tmp_list = [1,2]
+    tmp_list = db.query(Note).filter(Note.email == email).all()
+    print(tmp_list)
+    return tmp_list
 
 async def updateNoteStatus(nid: int):
-    db_tmp_note_obj = db.query(Note).filter(Note.id == nid)
-    db_tmp_note_obj.status = True
+    db_tmp_note_obj = db.query(Note).filter(Note.id == nid).first()
+    db_tmp_note_obj.status = 1
     db.commit()
+    db.refresh(db_tmp_note_obj)

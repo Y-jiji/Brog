@@ -119,7 +119,8 @@ async def pwdForget(req: Request, email: str, pwd: str, resp: Response):
     try:
         await pwdUpdate(email,pwd);
         return {'status':'success', 'msg':"修改密码成功"}
-    except Exception:
+    except Exception as e:
+        print(e)
         return {"status":'failure', 'msg':'修改密码失败'}
 
 # from _ext.security import verify_password, create_access_token

@@ -53,7 +53,7 @@ def insert_file(db: Session, filename: str, file_path: str):
 
 def delete_file(db: Session, filename: str):
     try:
-        db_tmp_file_obj = db.query(Pdf_File).filter(Pdf_File.filename == filename)
+        db_tmp_file_obj = db.query(Pdf_File).filter(Pdf_File.filename == filename).first()
         db_tmp_file_obj.is_delete = True
         db.commit()
         return True

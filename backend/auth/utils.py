@@ -58,7 +58,7 @@ async def userAlready(user: UserAuth):
 async def userVerify(user: UserAuth):
     try:
         if user.name:
-            sqlUserSet = db.query(SqlUser).filter_by(name = user.name).filter_by(pwd = user.pwd)
+            sqlUserSet = db.query(SqlUser).filter_by(email = user.email).filter_by(pwd = user.pwd)
         elif user.id:
             sqlUserSet = db.query(SqlUser).filter_by(id = user.id).filter_by(token = user.token)
         # 如果用户登录信息是错的, 那么这个集合是空集, 不会干扰正常用户
@@ -144,9 +144,10 @@ async def verifyCaptcha_(email: str, captcha: str):
     return ((captcha_obj != None) and (captcha_obj.captcha == captcha))
     
 async def pwdUpdate(email: str, pwd: str):
-    db_tmp_user_obj = db.query(SqlUser).filter(SqlUser.email==email)
+    db_tmp_user_obj = db.query(SqlUser).filter(SqlUser.email==email).first()
     db_tmp_user_obj.pwd = pwd
     db.commit()
+    db.refresh(db_tmp_user_obj)
      
 async def insert_user(email: str, pwd: str, name: str):
     print(email)
