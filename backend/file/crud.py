@@ -1,10 +1,12 @@
 
 from sqlalchemy.orm import Session
 from file import models, schemas
+from _ext.sqlalchemy import *
 
-def get_file_path(db: Session, filename: str):
+
+def get_file_path(db: Session, bid: str):
     try:
-        return db.query(models.Pdf_File).filter(models.Pdf_File.filename == filename, models.Pdf_File.is_delete == False ).first()
+        return db.query(models.Pdf_File).filter(models.Pdf_File.id == bid, models.Pdf_File.is_delete == False ).first()
     except:
         return False
 
@@ -23,3 +25,5 @@ def delete_file(db: Session, filename: str):
         return True
     except:
         return False
+
+

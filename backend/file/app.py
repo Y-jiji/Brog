@@ -8,7 +8,7 @@ import time
 from fastapi import Depends
 
 # 本文件夹依赖
-from .utils import writeFile
+from .utils import *
 from file.models import Pdf_File
 
 # 父文件夹依赖
@@ -153,11 +153,40 @@ async def wsTestPage(req: Request):
 
 
 @file.get("/get_file_path")
-async def getFilePath(req: Request, filename: str, db: Session = Depends(get_db)):
-    obj_tmp = crud.get_file_path(db=db, filename=filename)
+async def getFilePath(req: Request, bid: str, db: Session = Depends(get_db)):
+    obj_tmp = crud.get_file_path(db=db, bid=bid)
     if obj_tmp == False:
         return {'status': 'failure', "message": "读取文件失败"}
     path_tmp = obj_tmp.file_path
     # with open(path_tmp, 'rb') as file:
     #     return {'status':'success', 'content':file.read()}
     return {'status':'success', 'file_obj': path_tmp}
+
+
+@file.get("/list_book")
+async def listUserBook(req: Request, username:str):
+    try:
+        obj_list = queryBookList(username = username)
+        return {'status':'success', 'booklist': obj_list}
+    except Exception as e:
+        print(e)
+        return {'status':'failure', 'msg':"查询失败"}
+
+
+@file.get("/update_page")
+async def updatePersonalPage(req: Request, username:str, bid:int, page:int):
+    try:
+        updatePage(username=username, bid = bid, page=page)
+        return {'status':'success', 'msg':'更新成功'}
+    except Exception as e:
+        print(e)
+        return {'status':'failure', 'msg':"更新失败"}
+
+@file.get("/query_page")
+async def queryPersonalPage(req: Request, username:str, bid:int):
+    try:
+        obj_tmp = queryPage(username=username, bid=bid)
+        return {'status':'success', 'page_obj': obj_tmp}
+    except Exception as e:
+        print(e)
+        return {'status':'failure', 'msg':"查询失败"}

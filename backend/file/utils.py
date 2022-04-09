@@ -4,7 +4,7 @@ from typing import Callable
 from fastapi import UploadFile, WebSocket
 
 # 基于本文件夹的依赖项
-from file.models import Pdf_File
+from file.models import Pdf_File, Personal_File
 
 # 父文件夹依赖
 from settings import FILE_PATH
@@ -60,3 +60,23 @@ def delete_file(db: Session, filename: str):
     except:
         return False
 
+
+
+def queryBookList(username: str):
+    obj_list = db.query(Personal_File.bid,Personal_File.page, Personal_File.username ,Pdf_File.file_path,Pdf_File.filename,Pdf_File.cover_path).join(Pdf_File,Pdf_File.id == Personal_File.bid).filter(Personal_File.username == username).all()
+    return obj_list
+
+
+def updatePage(username:str, bid:int, page:int):
+    obj_tmp = db.query(Personal_File).filter(Personal_File.username == username, Personal_File.bid == bid).first()
+    if (obj_tmp):
+        obj_tmp.page = page
+    else:
+        obj_tmp = Personal_File(bid=bid,page=page,username=username)
+        db.add(obj_tmp)
+    db.commit()
+    db.refresh(obj_tmp)
+
+def queryPage(username:str, bid:int):
+    obj_tmp = db.query(Personal_File).filter(Personal_File.username == username, Personal_File.bid == bid).first()
+    return obj_tmp

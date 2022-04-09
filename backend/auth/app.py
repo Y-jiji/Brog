@@ -144,3 +144,18 @@ async def pwdForget(req: Request, email: str, pwd: str, resp: Response):
 @auth.get("/msg")
 async def test_msg(req: Request, resp: Response):
     return {"message": "跨域？"}
+
+
+@auth.get("/profile")
+async def getUserProfile(req:Request):
+    if (req.cookies["token"]):
+        try:
+            obj_tmp = await queryProfile(token = req.cookies["token"])
+            return {'status':'success', "profile_obj":obj_tmp}
+            
+        except Exception as e:
+            print(e)
+            return {'status':'failure', "msg":"查询失败"}
+    else:
+        return {'status':'failure', "msg":"请先登录"}
+    

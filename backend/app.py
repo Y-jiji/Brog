@@ -39,4 +39,4 @@ if __name__ == "__main__":
     import uvicorn as uv
     color = 33
     print(f'\033[{color}mapp located in folder:\n------{__file__}')
-    uv.run("app:main", reload=True)
+    uv.run("app:main",host= "0.0.0.0")

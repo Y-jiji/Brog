@@ -97,6 +97,7 @@ async def changeToken(user: UserAuth):
 
 async def checkCaptcha(email: str):
     obj = db.query(Captcha).filter(Captcha.email == email).first()
+    print(obj)
     if (not obj):
         return True
     time_tmp = obj.time
@@ -163,3 +164,10 @@ async def insert_user(email: str, pwd: str, name: str):
     # db.commit()
     # db.refresh()
     return True
+
+
+async def queryProfile(token: str):
+    print(token)
+    db_tmp_user_obj = db.query(SqlUser).filter(SqlUser.token == token).first()
+    return db_tmp_user_obj
+    # return token

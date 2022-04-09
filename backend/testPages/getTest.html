@@ -12,14 +12,11 @@
 <script>
     $('#api').click(function () {
         $.ajax({  //发送ajax请求
-            url: 'http://localhost:8000/auth/msg',
+            url: 'http://192.168.1.3:8000/email_captcha?email=799066947@qq.com',
             type: "get",
             data: {},
             success: function (arg) {
-                //arg = JSON.parse(arg);
                 console.log(arg);
-                $('#content').text(arg.message)
-                //return false;
             },
             error: function () {
                 console.log("网络请求错误!");
