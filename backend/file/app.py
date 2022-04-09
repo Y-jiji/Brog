@@ -7,6 +7,8 @@ from typing import Collection, List, Optional, Dict
 import time
 from fastapi import Depends
 
+from auth.utils import queryProfile
+
 # 本文件夹依赖
 from .utils import *
 from file.models import Pdf_File
@@ -164,8 +166,9 @@ async def getFilePath(req: Request, bid: str, db: Session = Depends(get_db)):
 
 
 @file.get("/list_book")
-async def listUserBook(req: Request, username:str):
+async def listUserBook(req: Request):
     try:
+        username = queryProfile(req.cookies["token"])
         obj_list = queryBookList(username = username)
         return {'status':'success', 'booklist': obj_list}
     except Exception as e:
@@ -174,8 +177,9 @@ async def listUserBook(req: Request, username:str):
 
 
 @file.get("/update_page")
-async def updatePersonalPage(req: Request, username:str, bid:int, page:int):
+async def updatePersonalPage(req: Request, bid:int, page:int):
     try:
+        username = queryProfile(req.cookies["token"])
         updatePage(username=username, bid = bid, page=page)
         return {'status':'success', 'msg':'更新成功'}
     except Exception as e:
@@ -183,8 +187,9 @@ async def updatePersonalPage(req: Request, username:str, bid:int, page:int):
         return {'status':'failure', 'msg':"更新失败"}
 
 @file.get("/query_page")
-async def queryPersonalPage(req: Request, username:str, bid:int):
+async def queryPersonalPage(req: Request, bid:int):
     try:
+        username = queryProfile(req.cookies["token"])
         obj_tmp = queryPage(username=username, bid=bid)
         return {'status':'success', 'page_obj': obj_tmp}
     except Exception as e:
