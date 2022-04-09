@@ -5,6 +5,7 @@ import Login from "../pages/Login"
 import Signup from "../pages/Signup"
 import Center from '../pages/Center'
 import Reader from '../pages/Reader'
+import Test from '../pages/Test'
 import { HashRouter,Route, Routes } from 'react-router-dom'
 
 const BaseRouter = () =>{
@@ -16,6 +17,7 @@ const BaseRouter = () =>{
                     <Route path='/signup' element = {<Signup />}></Route>
                     <Route path='/center' element = {<Center />}></Route>
                     <Route path='/reader' element = {<Reader />}></Route>
+                    <Route path='/test' element = {<Test />}></Route>
                 </Route>
                 <Route path = "*" element={<Error />}></Route>
             </Routes>

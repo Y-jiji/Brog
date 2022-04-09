@@ -63,7 +63,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .search_title{
@@ -72,8 +72,9 @@
 
 .search_content{
     flex: 1;
+    /* overflow-y: scroll; */
 }
 
-::-webkit-scrollbar{
+/* ::-webkit-scrollbar{
     width:0;
-  }
+  } */

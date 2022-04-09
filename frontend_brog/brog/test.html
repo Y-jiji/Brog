@@ -1,0 +1,26 @@
+<script>
+    var num = 1;
+    $("#ShowPanal").scroll(function () {
+        var h = $(this).height();//div可视区域的高度
+        var sh = $(this)[0].scrollHeight;//滚动的高度，$(this)指代jQuery对象，而$(this)[0]指代的是dom节点
+        var st = $(this)[0].scrollTop;//滚动条的高度，即滚动条的当前位置到div顶部的距离
+        //上面的代码是判断滚动条滑到底部的代码
+        if (h + st >= sh) {
+            //暂停滚动
+            $(this)[0].disabled = false;
+            num = num + 7;
+            $("#dataPanal").append("新内容");
+            //启用滚动
+            $(this)[0].disabled = true;
+        }
+    })
+</script><div id="ShowPanal" style="margin:5px">
+　　<table class="re_table" border="1px" style="border: 1px solid #dddddd; width: 100%">
+        <tr class="grey_bg" style="background:#75b9e5;height:40px">
+            <td rowspan="1" colspan="1" align="center" width="12%">编码</td>
+            <td rowspan="1" colspan="1" align="center" width="20%">名称</td>
+        </tr>
+　　</table></div>
+<div id="dataPanal">
+</div>
+    
