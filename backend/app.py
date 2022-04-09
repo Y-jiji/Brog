@@ -4,6 +4,7 @@ from file.app import *
 from user.app import *
 from note.app import *
 from settings import CORS_CONFIG
+from database import connect_mongo, close_mongo
 
 
 # 引入全局依赖
@@ -32,6 +33,9 @@ main.add_middleware(
     allow_methods=CORS_CONFIG["allow_methods"],
     allow_headers=CORS_CONFIG["allow_headers"],
 )
+
+main.add_event_handler("startup", connect_mongo)
+main.add_event_handler("shutdown", close_mongo)
 
 
 if __name__ == "__main__":
