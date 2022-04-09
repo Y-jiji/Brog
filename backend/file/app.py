@@ -20,7 +20,7 @@ from settings import FILE_PATH
 from file import crud, schemas
 from _ext.sqlalchemy import *
 from sqlalchemy.orm import Session
-
+from database import *
 #数据库初始化，如果没有，则自动创建
 Base.metadata.create_all(bind=engine)
 
@@ -190,3 +190,41 @@ async def queryPersonalPage(req: Request, username:str, bid:int):
     except Exception as e:
         print(e)
         return {'status':'failure', 'msg':"查询失败"}
+
+@file.get("/test_mongo")
+async def testMongo(req: Request):
+    try:
+        obj = await create_pdf('test', "wwwtest")
+        print(obj)
+        return {'status':'success'}
+    except Exception as e:
+        print(e)
+        return {'status':'failure', 'msg':"查询失败"}
+
+
+@file.post("/inverted_index")
+async def invertedIndex(req:Request,  bid:int, f: Optional[UploadFile] = File(None)): 
+    storagePath = path.join(FILE_PATH, f.filename)
+    # print(f.file)
+    # file = f.file.encoding
+    for line in f.file.readlines():
+        line_string = line.decode("gbk")
+        line_list = line_string.split()
+        if len(line_list) > 1:
+            await create_document(line_list[0], line_list[1].split(","), bid)
+        else:
+            await create_document(line_list[0], [], bid)
+        # break
+    return {"status":"success"}
+    # print(f)
+    # byte512 = await f.read(512)
+    # while byte512:
+    #     with open(storagePath, 'ab') as f:
+    #         f.write(byte512)
+        
+    #     byte512 = await f.read(512)
+    # await f.close()
+    # with open(storagePath, 'r') as doc:
+    #     for line in doc.readlines:
+    #         print(line)
+    #         break 

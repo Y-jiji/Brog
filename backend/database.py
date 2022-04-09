@@ -1,4 +1,5 @@
 ##mongodb driver
+from xml.dom.minidom import Document
 import motor.motor_asyncio
 
 PORT = 27017
@@ -28,6 +29,13 @@ async def create_pdf(filename, file):
     # result = await collection.insert_one({"filename":"aaa"})
     return result
 
+async def create_document(term, ref_list, bid ):
+    # doc_tmp = await collection.find({"term":term, "bid":bid})
+    document = {"term":term, "ref":ref_list, "bid":bid}
+    result = await collection.insert_one(document)
+    # result = await collection.insert_one({"filename":"aaa"})
+    return result
+    
 async def update_pdf(filename):
     pass
 
