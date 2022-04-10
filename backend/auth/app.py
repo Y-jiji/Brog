@@ -27,10 +27,10 @@ Base.metadata.create_all(bind=engine)
 
 
 def setAllCookies(resp: Response, sqlUser):
-    resp.set_cookie("id", sqlUser.id, expires=10800)
-    resp.set_cookie("token", sqlUser.token, expires=10800)
+    resp.set_cookie("id", sqlUser.id, expires=10800, samesite=None, secure=True)
+    resp.set_cookie("token", sqlUser.token, expires=10800, samesite=None, secure=True)
     resp.set_cookie("hashed_token", secureCtx.hash(
-        sqlUser.token), expires=10800)
+        sqlUser.token), expires=10800, samesite=None, secure=True)
 
 
 @auth.post("/register")

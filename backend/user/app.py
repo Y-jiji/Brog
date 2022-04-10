@@ -41,7 +41,7 @@ async def initProfile(profile: UserProfile, req: Request):
     try:
         if "token" in req.cookies and "id" in req.cookies:
             user_id = req.cookies["id"]
-            fields = profile.fields
+            fields = profile.fields_my
             await create_profile(uid=user_id, field_list=fields)
             return {'status': 'success'}
         else:

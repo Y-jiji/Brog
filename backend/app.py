@@ -1,4 +1,5 @@
 # 引入本文件依赖, 注意程序入口不能使用'.'记号作为开头的import, 因为程序入口不能判定它所处的文件夹
+from imp import reload
 from auth.app import *
 from file.app import *
 from user.app import *
@@ -47,4 +48,9 @@ if __name__ == "__main__":
     import uvicorn as uv
     color = 33
     print(f'\033[{color}mapp located in folder:\n------{__file__}')
-    uv.run("app:main",host= "0.0.0.0")
+    uv.run("app:main",
+        host= "0.0.0.0", 
+        ssl_keyfile= "./ca/key.pem",
+        ssl_certfile = "./ca/cert.pem",
+        
+    )

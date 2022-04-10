@@ -7,4 +7,4 @@ __all__ = [
 
 
 class UserProfile(BaseModel):
-    fields: Optional[List[int]]
+    fields_my: Optional[List[int]]
