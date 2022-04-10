@@ -59,8 +59,8 @@ async def userVerify(user: UserAuth):
     try:
         if user.email:
             sqlUserSet = db.query(SqlUser).filter_by(email = user.email).filter_by(pwd = user.pwd)
-        elif user.id:
-            sqlUserSet = db.query(SqlUser).filter_by(id = user.id).filter_by(token = user.token)
+        elif user.name:
+            sqlUserSet = db.query(SqlUser).filter_by(name = user.name).filter_by(pwd = user.pwd)
         # 如果用户登录信息是错的, 那么这个集合是空集, 不会干扰正常用户
         # 同时因为name和id的唯一性, 这个集合至多只有一个元素, 不存在修改多个用户的问题
         sqlUserSet.update({SqlUser.token: getRandStr(20)})
@@ -68,7 +68,8 @@ async def userVerify(user: UserAuth):
         # obj = db.query(SqlUser).filter_by(email = user.email)
         db.commit()
         assert sqlUser
-    except:
+    except Exception as e:
+        print(e.with_traceback())
         raise HTTPException(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="user is None"

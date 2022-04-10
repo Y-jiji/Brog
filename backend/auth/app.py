@@ -19,12 +19,12 @@ from email.utils import formataddr
 import smtplib, random
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-
 # 父级依赖项
 from _ext.security import secureCtx
 
 auth = FastAPI()
 Base.metadata.create_all(bind=engine)
+
 
 def setAllCookies(resp: Response, sqlUser):
     resp.set_cookie("id", sqlUser.id, expires=10800)
@@ -55,13 +55,15 @@ async def login(user: UserAuth, req: Request, resp: Response):
     print(sqlUser.token)
     return {"status": "success"}
 
+
 def login_required(func):
     async def inner(user: UserAuth, req: Request):
-        if ( not await user_token(user.name, req.cookies["token"])):
+        if (not await user_token(user.name, req.cookies["token"])):
             print(2)
-            return {"status": "failure", "msg":"no token"}
+            return {"status": "failure", "msg": "no token"}
         print(1)
         await func(user, req, **kwargs)
+
     return inner
 
 
@@ -71,12 +73,14 @@ async def logout(req: Request, resp: Response):
         resp.delete_cookie(x, path="brog/auth")
     return {"status": "success"}
 
+
 @auth.post('/test')
-async def test(user: UserAuth, req: Request, kk:str):
+async def test(user: UserAuth, req: Request, kk: str):
     print(999)
 
+
 @auth.post("/read-token")
-async def readToken(name:str, req: Request, resp: Response):
+async def readToken(name: str, req: Request, resp: Response):
     print(req.cookies)
     print(await user_token(name, "11"))
     return {
@@ -96,20 +100,23 @@ async def hardSetCookies(req: Request, resp: Response):
     ))
     return {"status": "success"}
 
+
 @auth.get("/email_captcha")
 async def emailCaptcha(req: Request, email: str, resp: Response):
     jud = await checkCaptcha(email)
     if (not jud):
-        return {'status':'failure', 'msg':"发送验证码太频繁"}
+        return {'status': 'failure', 'msg': "发送验证码太频繁"}
     try:
         await sendCaptcha(email=email)
-        return {'status':'success', 'msg':"验证码发送成功"}
+        return {'status': 'success', 'msg': "验证码发送成功"}
     except Exception:
-        return {'status':'failure', 'msg':"验证码发送失败"}
+        return {'status': 'failure', 'msg': "验证码发送失败"}
+
 
 @auth.get("/verify_captcha")
 async def verifyCaptcha(req: Request, email: str, captcha: str, resp: Response):
     return {'status': 'success', 'jud': await verifyCaptcha_(email, captcha)}
+
 
 @auth.get("/forget")
 async def pwdForget(req: Request, email: str, pwd: str, resp: Response):
@@ -117,11 +124,12 @@ async def pwdForget(req: Request, email: str, pwd: str, resp: Response):
     ## 这边处理直接更新?
     ## 密码格式检测
     try:
-        await pwdUpdate(email,pwd);
-        return {'status':'success', 'msg':"修改密码成功"}
+        await pwdUpdate(email, pwd);
+        return {'status': 'success', 'msg': "修改密码成功"}
     except Exception as e:
         print(e)
-        return {"status":'failure', 'msg':'修改密码失败'}
+        return {"status": 'failure', 'msg': '修改密码失败'}
+
 
 # from _ext.security import verify_password, create_access_token
 # from .models import SqlUser
@@ -147,15 +155,14 @@ async def test_msg(req: Request, resp: Response):
 
 
 @auth.get("/profile")
-async def getUserProfile(req:Request):
+async def getUserProfile(req: Request):
     if (req.cookies["token"]):
         try:
-            obj_tmp = await queryProfile(token = req.cookies["token"])
-            return {'status':'success', "profile_obj":obj_tmp}
-            
+            obj_tmp = await queryProfile(token=req.cookies["token"])
+            return {'status': 'success', "profile_obj": obj_tmp}
+
         except Exception as e:
             print(e)
-            return {'status':'failure', "msg":"查询失败"}
+            return {'status': 'failure', "msg": "查询失败"}
     else:
-        return {'status':'failure', "msg":"请先登录"}
-    
+        return {'status': 'failure', "msg": "请先登录"}

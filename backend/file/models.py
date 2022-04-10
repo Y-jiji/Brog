@@ -1,6 +1,6 @@
 # from pydantic import BaseModel
 
-from _ext.sqlalchemy import Boolean, Column, Integer, String,engine
+from _ext.sqlalchemy import Boolean, Column, Integer, String, engine
 from database import Base
 
 
