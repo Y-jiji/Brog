@@ -27,3 +27,11 @@ def delete_file(db: Session, filename: str):
         return False
 
 
+async def insert_image(db: Session, bid: str, cover_path: str):
+    print(111)
+    db_tmp_file_obj = db.query(models.Pdf_File).filter(models.Pdf_File.id == bid).first()
+    print(db_tmp_file_obj)
+    db_tmp_file_obj.cover_path = cover_path
+    db.commit()
+    db.refresh(db_tmp_file_obj)
+    return db_tmp_file_obj

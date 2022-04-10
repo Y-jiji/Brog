@@ -7,7 +7,7 @@ from fastapi import UploadFile, WebSocket
 from file.models import Pdf_File, Personal_File
 
 # 父文件夹依赖
-from settings import FILE_PATH
+from settings import FILE_PATH, FILE_PATH_IMG
 from _ext.sqlalchemy import *
 
 # 外部依赖项
@@ -37,6 +37,16 @@ async def writeFile(upF: UploadFile, progressPlus: Callable):
         byte512 = await upF.read(512)
     await upF.close()
 
+
+async def writeFile_img(upF: UploadFile, progressPlus: Callable):
+    storagePath = path.join(FILE_PATH_IMG, upF.filename)
+    byte512 = await upF.read(512)
+    while byte512:
+        with open(storagePath, 'ab') as f:
+            f.write(byte512)
+        progressPlus(len(byte512))
+        byte512 = await upF.read(512)
+    await upF.close()
 
 def get_file_path(db: Session, filename: str):
     try:

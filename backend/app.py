@@ -24,6 +24,10 @@ main.mount("/static", static, name="static")
 main.mount("/user", user, name="user")
 main.mount("/note", note, name="note")
 
+
+main.mount("/image", StaticFiles(directory="image"), name="image")
+main.mount("/uploadedFile", StaticFiles(directory="uploadedFile"), name="uploadedFile")
+
 # 挂载中间件
 main.add_middleware(
     CORSMiddleware,

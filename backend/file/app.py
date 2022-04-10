@@ -16,7 +16,7 @@ from file.models import Pdf_File
 # 父文件夹依赖
 from auth.public import login_required
 from _ext.security import getRandStr, secureCtx
-from settings import FILE_PATH
+from settings import FILE_PATH, HOST_, PORT_
 
 #数据库
 from file import crud, schemas
@@ -77,8 +77,9 @@ async def upload(req: Request, resp: Response, f: Optional[UploadFile] = File(No
     def insertdb(upF: UploadFile):
         #地址存入数据库
         db = SessionLocal()
-        ret = crud.insert_file(db, upF.filename, path.join(FILE_PATH, upF.filename))
+        ret = crud.insert_file(db, upF.filename, "{}:{}/uploadedFile/{}".format(HOST_, PORT_, upF.filename))
         db.close()
+        return ret
     # 提交任务, 返回结果
     asyncio.create_task(
         writeFile(f, progPlus)
@@ -86,8 +87,8 @@ async def upload(req: Request, resp: Response, f: Optional[UploadFile] = File(No
 
     print(time.time() - t)
     #存入数据库
-    insertdb(f)
-    return {"status": "success", "taskId": taskId}
+    obj_ret = insertdb(f)
+    return {"status": "success", "taskId": taskId, "obj_ret":obj_ret}
 
 
 # query upload
@@ -159,10 +160,10 @@ async def getFilePath(req: Request, bid: str, db: Session = Depends(get_db)):
     obj_tmp = crud.get_file_path(db=db, bid=bid)
     if obj_tmp == False:
         return {'status': 'failure', "message": "读取文件失败"}
-    path_tmp = obj_tmp.file_path
+    # path_tmp = obj_tmp.file_path
     # with open(path_tmp, 'rb') as file:
     #     return {'status':'success', 'content':file.read()}
-    return {'status':'success', 'file_obj': path_tmp}
+    return {'status':'success', 'file_obj': obj_tmp}
 
 
 @file.get("/list_book")
@@ -233,3 +234,42 @@ async def invertedIndex(req:Request,  bid:int, f: Optional[UploadFile] = File(No
     #     for line in doc.readlines:
     #         print(line)
     #         break 
+
+
+
+@file.post("/upload_img")
+@login_required
+async def upload_img(req: Request, bid: str, resp: Response, f: Optional[UploadFile] = File(None)):
+    if not f:
+        return {"status": "failure", "reason": "no file"}
+
+    t = time.time()
+    userId = req.cookies["id"]
+    taskId = await getPendingId(userId)
+    userPenDict = penDict[userId]
+
+    def progPlus(x):
+        # 任务进行时调用, 报告任务进度
+        userPenDict[taskId] += x
+
+    def popTask():
+        # 任务结束时调用, 弹出该任务
+        if len(userPenDict) > 1:
+            userPenDict.pop(taskId)
+        else:
+            penDict.pop(userId)
+
+    async def insertdb_img(upF: UploadFile):
+        #地址存入数据库
+        db = SessionLocal()
+        ret = await crud.insert_image(db, bid, "{}:{}/image/{}".format(HOST_, PORT_, upF.filename))
+        db.close()
+    # 提交任务, 返回结果
+    asyncio.create_task(
+        writeFile_img(f, progPlus)
+    ).add_done_callback(lambda x: popTask())
+
+    print(time.time() - t)
+    #存入数据库
+    await insertdb_img(f)
+    return {"status": "success", "taskId": taskId}

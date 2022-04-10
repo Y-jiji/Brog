@@ -31,8 +31,12 @@ SQLALCHEMY_CONFIG["url"] = get_SQLALCHEMY_CONFIG_URL(SQLALCHEMY_CONFIG)
 
 
 FILE_PATH = path.join(path.dirname(__file__), "uploadedFile")
-
+FILE_PATH_IMG = path.join(path.dirname(__file__), "image")
 
 ## 邮箱验证码
 SENDER_ADDRESS = '799066947@qq.com'
 SENDER_PASS = 'fscoaectlhobbefg'
+
+
+HOST_ = "127.0.0.1"
+PORT_ = "8000"
