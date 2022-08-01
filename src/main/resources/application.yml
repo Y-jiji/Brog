@@ -1,0 +1,9 @@
+server:
+  port: 8200
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/brog
+    username: root
+    password: Qazwsx06-
+
