@@ -1,5 +1,6 @@
 package brog.backend_system.controller;
 
+import brog.backend_system.entity.request.GenCaptchaBody;
 import brog.backend_system.entity.request.LoginBody;
 import brog.backend_system.entity.request.RegisterBody;
 import brog.backend_system.entity.response.StatusInfoMessage;
@@ -23,5 +24,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<StatusInfoMessage> register(@RequestBody RegisterBody body){
         return authService.register(body);
+    }
+
+    @PostMapping("/gen_captcha")
+    public ResponseEntity<StatusInfoMessage> genCaptcha(@RequestBody GenCaptchaBody body){
+        return authService.genCaptcha(body);
     }
 }

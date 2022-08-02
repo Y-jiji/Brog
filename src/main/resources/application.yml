@@ -2,8 +2,23 @@ server:
   port: 8200
 
 spring:
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: brog
+      auto-index-creation: true
   datasource:
-    url: jdbc:mysql://localhost:3306/brog
+    url: jdbc:mysql://localhost:3306/brog_db
     username: root
-    password: Qazwsx06-
-
+    password: 000000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mail:
+    host: smtp.163.com
+    username: gonggongjohn@163.com
+    password: HJXMBFPTYRMZHHQZ
+    port: 465
+    default-encoding: UTF-8
+    protocol: smtps
