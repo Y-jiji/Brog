@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
             );
         }
         Long userId = accountInTable.getId();
-        String token = jwtUtils.createToken(userId.toString(), 300);
+        String token = jwtUtils.createToken(userId.toString(), 1800);
         accountInTable.setToken(token);
         accountMapper.updateById(accountInTable);
         HttpHeaders headers = new HttpHeaders();

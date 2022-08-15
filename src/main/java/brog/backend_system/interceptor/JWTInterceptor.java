@@ -16,6 +16,10 @@ public class JWTInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
+        if(token == null){
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
         Claims parsedToken = jwtUtils.parseToken(token);
         if(parsedToken == null || jwtUtils.hasExpired(parsedToken)){
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

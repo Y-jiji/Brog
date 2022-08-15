@@ -1,9 +1,6 @@
 package brog.backend_system.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +33,10 @@ public class JWTUtils {
                     .parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
-                    .parseClaimsJwt(token)
+                    .parseClaimsJws(token)
                     .getBody();
+        } catch (ExpiredJwtException e){
+            System.out.println("Token expired: " + token);
         } catch (JwtException e){
             e.printStackTrace();
         }
@@ -47,5 +46,21 @@ public class JWTUtils {
     public boolean hasExpired(Claims authorizer){
         Date expireTime = authorizer.getExpiration();
         return expireTime.before(new Date());
+    }
+
+    public Long getUserId(Claims authorizer){
+        long userId = -1L;
+        try {
+            userId = Long.parseLong(authorizer.getSubject());
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+        return userId;
+    }
+
+    public Long parseAndGetId(String token){
+        Claims authorizer = parseToken(token);
+        Long uid = getUserId(authorizer);
+        return uid;
     }
 }
