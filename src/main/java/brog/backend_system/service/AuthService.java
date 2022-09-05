@@ -6,8 +6,10 @@ import brog.backend_system.entity.request.RegisterBody;
 import brog.backend_system.entity.response.StatusInfoMessage;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface AuthService {
-    ResponseEntity<StatusInfoMessage> login(LoginBody body);
+    ResponseEntity<StatusInfoMessage> login(LoginBody body, HttpServletResponse response);
 
     ResponseEntity<StatusInfoMessage> register(RegisterBody body);
 

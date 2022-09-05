@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    @Value("${profile.avatar}")
+    public String avatarRootPath;
     @Value("${material.rootpath}")
     public String materialRootPath;
 
@@ -26,7 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/material_resource/**")
+        registry.addResourceHandler("/file/avatar/**")
+                .addResourceLocations("file:" + avatarRootPath);
+        registry.addResourceHandler("/file/material/**")
                 .addResourceLocations("file:" + materialRootPath);
     }
 }

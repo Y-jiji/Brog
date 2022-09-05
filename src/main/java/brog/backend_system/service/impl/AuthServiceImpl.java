@@ -2,12 +2,14 @@ package brog.backend_system.service.impl;
 
 import brog.backend_system.entity.Account;
 import brog.backend_system.entity.Captcha;
+import brog.backend_system.entity.Profile;
 import brog.backend_system.entity.request.GenCaptchaBody;
 import brog.backend_system.entity.request.LoginBody;
 import brog.backend_system.entity.request.RegisterBody;
 import brog.backend_system.entity.response.StatusInfoMessage;
 import brog.backend_system.mapper.AccountMapper;
 import brog.backend_system.mapper.CaptchaMapper;
+import brog.backend_system.mapper.ProfileMapper;
 import brog.backend_system.service.AuthService;
 import brog.backend_system.util.JWTUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,6 +21,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Random;
 
@@ -27,12 +31,13 @@ import java.util.Random;
 public class AuthServiceImpl implements AuthService {
     AccountMapper accountMapper;
     CaptchaMapper captchaMapper;
+    ProfileMapper profileMapper;
 
     JavaMailSender mailSender;
     JWTUtils jwtUtils;
 
     @Override
-    public ResponseEntity<StatusInfoMessage> login(LoginBody body) {
+    public ResponseEntity<StatusInfoMessage> login(LoginBody body, HttpServletResponse response) {
         String account = body.getAccount();
         String password = body.getPassword();
         Account accountInTable = accountMapper.selectOne(
@@ -48,11 +53,12 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtils.createToken(userId.toString(), 1800);
         accountInTable.setToken(token);
         accountMapper.updateById(accountInTable);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("token", token);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setMaxAge(-1);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return new ResponseEntity<>(
                 new StatusInfoMessage(1, token),
-                headers,
                 HttpStatus.OK
         );
     }
@@ -87,6 +93,9 @@ public class AuthServiceImpl implements AuthService {
         accountEntity.setEmail(email);
         accountEntity.setPassword(password);
         accountMapper.insert(accountEntity);
+        Profile profileEntity = new Profile();
+        profileEntity.setUsername(username);
+        profileMapper.insert(profileEntity);
 
         return new ResponseEntity<>(
                 new StatusInfoMessage(1, "ok"),

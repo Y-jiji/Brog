@@ -1,5 +1,9 @@
 server:
   port: 8200
+  ssl:
+    key-store-type: PKCS12
+    key-store-password: DbVXUtep
+    key-store: classpath:8415366_brogs.cn.pfx
 
 spring:
   data:
@@ -28,5 +32,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+profile:
+  avatar: avatar/ # Vacant for privacy protection (should be completed when running)
+
 material:
-  rootpath: /home/ # Vacant for privacy issue (should be completed when running)
+  rootpath: material/ # Vacant for privacy protection (should be completed when running)

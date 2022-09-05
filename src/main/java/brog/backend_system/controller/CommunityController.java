@@ -6,15 +6,15 @@ import brog.backend_system.entity.response.StatusInfoMessage;
 import brog.backend_system.service.CommunityService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/community")
 @AllArgsConstructor
+@Transactional
 public class CommunityController {
     CommunityService communityService;
 

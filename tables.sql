@@ -12,6 +12,12 @@ create table captcha(
     `expire` timestamp
 );
 
+create table profile(
+    `username` varchar(50) NOT NULL PRIMARY KEY,
+    `nickname` varchar(50),
+    `avatar` varchar(200)
+);
+
 create table material(
     `id` varchar(50) NOT NULL PRIMARY KEY,
     `type` int NOT NULL,

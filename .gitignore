@@ -33,6 +33,6 @@ build/
 .vscode/
 .DS_Store
 
-material/
+filesystem/
 
 default_server_params.txt
